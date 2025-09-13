@@ -21,10 +21,14 @@ repos:
     hooks:
     -   id: nbstripout
 
--   repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.387
-    hooks:
-    -   id: pyright
+# -   repo: https://github.com/RobertCraigie/pyright-python
+#     rev: v1.1.405
+#     hooks:
+#     -   id: pyright
+#         additional_dependencies:
+#             - flask
+#             - google-generativeai
+#             - python-dotenv  # 特別注意：dotenv 套件在 PyPI 上的名字是 python-dotenv
 
 -   repo: local
     hooks:

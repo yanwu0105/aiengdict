@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 中英文字典</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 AI 中英文字典</h1>
+            <p>輸入中文或英文單詞，獲得AI智能解釋</p>
+        </header>
+
+        <main>
+            <div class="search-section">
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="wordInput"
+                        placeholder="請輸入中文或英文單詞..."
+                        autocomplete="off"
+                    >
+                    <button id="searchBtn" onclick="lookupWord()">
+                        <span id="btnText">查詢</span>
+                        <span id="loading" class="loading hidden">🔄</span>
+                    </button>
+                </div>
+                <div class="language-indicator">
+                    <span id="languageDetected"></span>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <div id="resultContainer" class="result-container hidden">
+                    <div class="result-header">
+                        <h2 id="resultWord"></h2>
+                        <span id="resultLanguage" class="language-badge"></span>
+                    </div>
+                    <div id="resultDefinition" class="definition"></div>
+                </div>
+
+                <div id="errorContainer" class="error-container hidden">
+                    <div class="error-message">
+                        <span>❌</span>
+                        <p id="errorText"></p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by Google Gemini AI</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
