@@ -3,6 +3,7 @@ import re
 from flask import Flask, render_template, request, jsonify
 import google.generativeai as genai
 from dotenv import load_dotenv
+from prompts import get_prompt
 
 # Load environment variables
 load_dotenv()
@@ -11,7 +12,10 @@ app = Flask(__name__)
 
 # Configure Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.5-flash")
+
+# Prompt style configuration (can be changed for testing)
+PROMPT_STYLE = "detailed"  # Options: "standard" or "detailed"
 
 
 def detect_language(text):
@@ -23,26 +27,9 @@ def detect_language(text):
 def get_word_definition(word, language):
     """Get word definition using Gemini API"""
     try:
-        if language == "chinese":
-            prompt = f"""
-            請提供中文詞彙「{word}」的詳細解釋，包括：
-            1. 英文翻譯
-            2. 詞性
-            3. 詳細定義
-            4. 使用例句（中英對照）
-
-            請以清晰易懂的格式回答。
-            """
-        else:
-            prompt = f"""
-            Please provide a detailed explanation for the English word "{word}", including:
-            1. Chinese translation
-            2. Part of speech
-            3. Detailed definition
-            4. Example sentences (with Chinese translation)
-
-            Please format the response clearly.
-            """
+        # Get prompt from prompts.py
+        prompt_template = get_prompt(language, PROMPT_STYLE)
+        prompt = prompt_template.format(word=word)
 
         response = model.generate_content(prompt)
         return response.text
