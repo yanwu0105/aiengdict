@@ -1,0 +1,36 @@
+# .pre-commit-config.yaml
+
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+    -   id: trailing-whitespace   # remove trailing whitespace
+    -   id: end-of-file-fixer     # ensure file ends with a new line
+    -   id: check-yaml            # check YAML file syntax
+    -   id: check-added-large-files # prevent commit large files (e.g. > 5MB data file)
+
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.4
+    hooks:
+    -   id: ruff
+        args: [--fix]  # auto fix
+    -   id: ruff-format
+
+-   repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+    -   id: nbstripout
+
+-   repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.387
+    hooks:
+    -   id: pyright
+
+-   repo: local
+    hooks:
+    -   id: pytest
+        name: pytest
+        entry: ./.venv/bin/pytest tests
+        language: python
+        pass_filenames: false
+        always_run: true
