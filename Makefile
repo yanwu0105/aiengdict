@@ -9,6 +9,7 @@ open-venv: ## Setup development environment
 
 test: ## Run tests
 	uv run pytest tests/ -v
+	uv run pytest tests/ --cov=. --cov-report=term-missing
 
 clean: ## Clean cache and temporary files
 	uv run pyclean -v .
