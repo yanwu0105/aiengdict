@@ -4,11 +4,15 @@ from flask import Flask, render_template, request, jsonify
 import google.generativeai as genai
 from dotenv import load_dotenv
 from prompts import get_prompt
+from src.database import init_database, save_word_record
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
+
+# Initialize database
+init_database(app)
 
 # Configure Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -54,6 +58,10 @@ def lookup_word():
 
     language = detect_language(word)
     definition = get_word_definition(word, language)
+
+    # Save to database if query was successful (no error message)
+    if not definition.startswith("查詢時發生錯誤"):
+        save_word_record(word, language, definition)
 
     return jsonify({"word": word, "language": language, "definition": definition})
 

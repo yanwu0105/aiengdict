@@ -10,3 +10,35 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# UV lock file
+uv.lock
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
