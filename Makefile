@@ -8,8 +8,7 @@ open-venv: ## Setup development environment
 	source .venv/bin/activate
 
 test: ## Run tests
-	uv run pytest tests/ -v
-	uv run pytest tests/ --cov=. --cov-report=term-missing
+	uv run python scripts/run_tests.py
 
 clean: ## Clean cache and temporary files
 	uv run pyclean -v .
@@ -30,4 +29,13 @@ run: ## Run the main application
 	uv run python main.py
 
 dev: ## Run in development mode with auto-reload
-	uv run python -m uvicorn main:app --reload
+	uv run python main.py
+
+view-db: ## View database contents
+	uv run python scripts/view_database.py
+
+clear-db: ## Clear database contents (with confirmation)
+	uv run python scripts/clear_database.py
+
+clear-db-force: ## Force clear database contents (no confirmation)
+	uv run python scripts/clear_database.py --force

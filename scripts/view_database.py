@@ -3,6 +3,11 @@
 Script to view database contents
 """
 
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from flask import Flask
 from src.database import init_database
 from src.models import WordRecord, db

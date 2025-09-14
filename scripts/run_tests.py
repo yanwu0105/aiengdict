@@ -35,8 +35,8 @@ def main():
     print("🧪 AI English-Chinese Dictionary Test Suite")
     print("=" * 60)
 
-    # Change to project directory
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    # Change to project directory (parent of scripts directory)
+    os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
     # Test commands
     test_commands = [

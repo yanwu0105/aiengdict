@@ -9,11 +9,19 @@ from src.models import db, WordRecord
 
 def init_database(app: Flask):
     """Initialize database with Flask app"""
-    # Configure SQLite database
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    database_path = os.path.join(basedir, "..", "dictionary.db")
+    # Check if we're in testing mode
+    if os.getenv("TESTING") or os.getenv("FLASK_ENV") == "testing":
+        # Use in-memory database for testing
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+            "DATABASE_URL", "sqlite:///:memory:"
+        )
+        app.config["TESTING"] = True
+    else:
+        # Configure SQLite database for production
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        database_path = os.path.join(basedir, "..", "dictionary.db")
+        app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{database_path}"
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{database_path}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Initialize SQLAlchemy with app

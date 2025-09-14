@@ -3,7 +3,7 @@ import re
 from flask import Flask, render_template, request, jsonify
 import google.generativeai as genai
 from dotenv import load_dotenv
-from prompts import get_prompt
+from docs.prompts import get_prompt
 from src.database import init_database, save_word_record
 
 # Load environment variables

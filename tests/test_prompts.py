@@ -2,7 +2,7 @@
 Tests for prompts.py module
 """
 
-from prompts import (
+from docs.prompts import (
     CHINESE_PROMPT,
     ENGLISH_PROMPT,
     CHINESE_PROMPT_DETAILED,

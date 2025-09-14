@@ -20,6 +20,8 @@ def mock_environment():
             "GEMINI_API_KEY": "test_api_key_12345",
             "FLASK_ENV": "testing",
             "FLASK_DEBUG": "False",
+            "TESTING": "1",
+            "DATABASE_URL": "sqlite:///:memory:",
         },
     ):
         yield
