@@ -43,12 +43,57 @@ function hideLoading() {
     loading.classList.add('hidden');
 }
 
+// Clean up excessive whitespace and line breaks
+function cleanDefinitionText(text) {
+    return text
+        .replace(/\n\s*\n\s*\n+/g, '\n\n')  // Replace multiple line breaks with double line breaks
+        .replace(/【例句】\s*:\s*\n+/g, '【例句】:\n')  // Clean up after 【例句】:
+        .replace(/【.*?】\s*:\s*\n+/g, (match) => match.replace(/\n+/g, '\n'))  // Clean up after any 【】: pattern
+        .replace(/^\s+|\s+$/g, '')          // Trim leading and trailing whitespace
+        .replace(/[ \t]+/g, ' ')            // Replace multiple spaces/tabs with single space
+        .replace(/\n{3,}/g, '\n\n');        // Replace 3+ line breaks with just 2
+}
+
+// Clean up HTML to reduce spacing
+function cleanHtml(html) {
+    return html
+        .replace(/<p><\/p>/g, '')           // Remove empty paragraphs
+        .replace(/<p>\s*<\/p>/g, '')        // Remove paragraphs with only whitespace
+        .replace(/<p>\s*&nbsp;\s*<\/p>/g, '') // Remove paragraphs with only &nbsp;
+        .replace(/(<\/li>)\s*<p>/g, '$1')   // Remove paragraph tags after list items
+        .replace(/<\/p>\s*(<li>)/g, '$1')   // Remove paragraph tags before list items
+        .replace(/(<br\s*\/?>){2,}/g, '<br>') // Replace multiple <br> tags with single one
+        .replace(/\s{2,}/g, ' ')            // Replace multiple spaces with single space
+        .replace(/>\s+</g, '><');           // Remove whitespace between tags
+}
+
 // Show result
 function showResult(data) {
     hideContainers();
     resultWord.textContent = data.word;
     resultLanguage.textContent = data.language === 'chinese' ? '中文' : 'English';
-    resultDefinition.textContent = data.definition;
+
+    // Parse markdown and convert to HTML
+    try {
+        // Check if marked library is available
+        if (typeof marked !== 'undefined') {
+            const cleanedText = cleanDefinitionText(data.definition);
+            console.log('Original text:', data.definition);
+            console.log('Cleaned text:', cleanedText);
+            let parsedHtml = marked.parse(cleanedText);
+            parsedHtml = cleanHtml(parsedHtml);
+            console.log('Final HTML:', parsedHtml);
+            resultDefinition.innerHTML = parsedHtml;
+        } else {
+            console.error('Marked library not loaded, falling back to plain text');
+            resultDefinition.textContent = data.definition;
+        }
+    } catch (error) {
+        // Fallback to plain text if markdown parsing fails
+        console.error('Markdown parsing failed:', error);
+        resultDefinition.textContent = data.definition;
+    }
+
     resultContainer.classList.remove('hidden');
 }
 

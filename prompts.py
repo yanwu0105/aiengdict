@@ -36,7 +36,7 @@ CHINESE_PROMPT_DETAILED = """
 【英文解釋】: [Simple English Definition]
 【時態變化】: [base form], [past tense], [past participle], [present participle], [third person singular] (僅在單詞為動詞時提供)
 【同義詞】: [Synonyms]
-【例句】: [Example Sentences]
+【例句】: [Example Sentences] [Chinese Translation]
 -
 請提供中文詞彙「{word}」的詳細解釋
 """
@@ -60,7 +60,7 @@ Output format:
 【英文解釋】: [Simple English Definition]
 【時態變化】: [base form], [past tense], [past participle], [present participle], [third person singular] （Only include if the word is a verb)
 【同義詞】: [Synonyms]
-【例句】: [Example Sentence]
+【例句】: [Example Sentence] [Chinese Translation]
 -
 Please provide a detailed explanation for the English word "{word}"
 """

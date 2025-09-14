@@ -156,9 +156,68 @@ main {
 
 .definition {
     font-size: 1.1rem;
-    line-height: 1.8;
+    line-height: 1.6;
     color: #444;
-    white-space: pre-wrap;
+    white-space: pre-line;
+}
+
+/* Markdown styling for definition content */
+.definition h1, .definition h2, .definition h3 {
+    color: #333;
+    margin: 15px 0 10px 0;
+    font-weight: 600;
+}
+
+.definition h1 { font-size: 1.4rem; }
+.definition h2 { font-size: 1.3rem; }
+.definition h3 { font-size: 1.2rem; }
+
+.definition strong {
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.definition em {
+    font-style: italic;
+    color: #4a5568;
+}
+
+.definition code {
+    background: #f7fafc;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #e53e3e;
+    border: 1px solid #e2e8f0;
+}
+
+.definition ul, .definition ol {
+    margin: 5px 0;
+    padding-left: 25px;
+}
+
+.definition li {
+    margin: 0px 0 5px 0;
+    line-height: 1.0;
+    padding-bottom: 0;
+}
+
+.definition p {
+    margin: 1px 0;
+}
+
+/* Reduce spacing for paragraphs inside list items */
+.definition li p {
+    margin: 2px 0;
+}
+
+.definition blockquote {
+    border-left: 4px solid #667eea;
+    padding-left: 15px;
+    margin: 15px 0;
+    color: #666;
+    font-style: italic;
 }
 
 .error-container {
