@@ -52,6 +52,20 @@
             </div>
         </main>
 
+        <!-- Query History Section -->
+        <section class="history-section">
+            <div class="history-header">
+                <h3>📚 查詢歷史</h3>
+                <button id="refreshHistoryBtn" class="refresh-btn" onclick="loadQueryHistory()">
+                    <span id="refreshIcon">🔄</span>
+                    重新載入
+                </button>
+            </div>
+            <div id="historyContainer" class="history-container">
+                <div class="loading-history">載入中...</div>
+            </div>
+        </section>
+
         <footer>
         </footer>
     </div>

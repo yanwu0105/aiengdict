@@ -53,3 +53,34 @@ def save_word_record(word: str, language: str, definition: str) -> bool:
         db.session.rollback()
         print(f"Database save error: {e}")
         return False
+
+
+def get_query_history(limit: int = 20) -> list:
+    """
+    Get query history ordered by query times (descending)
+
+    Args:
+        limit: Maximum number of records to return
+
+    Returns:
+        list: List of dictionaries containing word history data
+    """
+    try:
+        records = (
+            WordRecord.query.order_by(WordRecord.query_times.desc()).limit(limit).all()
+        )
+        return [
+            {
+                "word": record.word,
+                "language": record.language,
+                "query_times": record.query_times,
+                "definition": record.definition[:200] + "..."
+                if len(record.definition) > 200
+                else record.definition,
+                "updated_on": record.updated_on.strftime("%Y-%m-%d %H:%M"),
+            }
+            for record in records
+        ]
+    except Exception as e:
+        print(f"Database query error: {e}")
+        return []

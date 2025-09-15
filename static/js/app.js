@@ -10,6 +10,8 @@ const resultWord = document.getElementById('resultWord');
 const resultLanguage = document.getElementById('resultLanguage');
 const resultDefinition = document.getElementById('resultDefinition');
 const errorText = document.getElementById('errorText');
+const historyContainer = document.getElementById('historyContainer');
+const refreshIcon = document.getElementById('refreshIcon');
 
 // Language detection function
 function detectLanguage(text) {
@@ -134,6 +136,8 @@ async function lookupWord() {
 
         if (response.ok) {
             showResult(data);
+            // Refresh history after successful query
+            loadQueryHistory();
         } else {
             showError(data.error || '查詢失敗，請稍後再試');
         }
@@ -156,7 +160,67 @@ wordInput.addEventListener('keypress', function(e) {
 
 searchBtn.addEventListener('click', lookupWord);
 
+// Load query history
+async function loadQueryHistory() {
+    const refreshBtn = document.getElementById('refreshHistoryBtn');
+
+    try {
+        // Show loading state
+        refreshIcon.classList.add('loading');
+        refreshBtn.disabled = true;
+
+        const response = await fetch('/history');
+        const data = await response.json();
+
+        if (response.ok && data.history) {
+            displayQueryHistory(data.history);
+        } else {
+            historyContainer.innerHTML = '<div class="no-history">載入歷史記錄失敗</div>';
+        }
+    } catch (error) {
+        console.error('Error loading history:', error);
+        historyContainer.innerHTML = '<div class="no-history">網路連線錯誤</div>';
+    } finally {
+        // Hide loading state
+        refreshIcon.classList.remove('loading');
+        refreshBtn.disabled = false;
+    }
+}
+
+// Display query history
+function displayQueryHistory(history) {
+    if (!history || history.length === 0) {
+        historyContainer.innerHTML = '<div class="no-history">尚無查詢記錄</div>';
+        return;
+    }
+
+    const historyHtml = history.map(item => `
+        <div class="history-item" onclick="searchHistoryWord('${item.word}')">
+            <div class="history-word">
+                <span class="word">${item.word}</span>
+                <span class="language-tag ${item.language}">${item.language === 'chinese' ? '中' : 'EN'}</span>
+            </div>
+            <div class="history-info">
+                <span class="query-count">查詢 ${item.query_times} 次</span>
+                <span class="last-query">${item.updated_on}</span>
+            </div>
+            <div class="history-preview">${item.definition}</div>
+        </div>
+    `).join('');
+
+    historyContainer.innerHTML = historyHtml;
+}
+
+// Search word from history
+function searchHistoryWord(word) {
+    wordInput.value = word;
+    updateLanguageIndicator();
+    lookupWord();
+}
+
 // Focus on input when page loads
 document.addEventListener('DOMContentLoaded', function() {
     wordInput.focus();
+    // Load initial history
+    loadQueryHistory();
 });

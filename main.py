@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, jsonify
 import google.generativeai as genai
 from dotenv import load_dotenv
 from docs.prompts import get_prompt
-from src.database import init_database, save_word_record
+from src.database import init_database, save_word_record, get_query_history
 
 # Load environment variables
 load_dotenv()
@@ -64,6 +64,16 @@ def lookup_word():
         save_word_record(word, language, definition)
 
     return jsonify({"word": word, "language": language, "definition": definition})
+
+
+@app.route("/history", methods=["GET"])
+def get_history():
+    """API endpoint for getting query history"""
+    try:
+        history = get_query_history()
+        return jsonify({"history": history})
+    except Exception as e:
+        return jsonify({"error": f"獲取歷史記錄失敗: {str(e)}"}), 500
 
 
 if __name__ == "__main__":
