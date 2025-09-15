@@ -12,6 +12,11 @@ const resultDefinition = document.getElementById('resultDefinition');
 const errorText = document.getElementById('errorText');
 const historyContainer = document.getElementById('historyContainer');
 const refreshIcon = document.getElementById('refreshIcon');
+const userSection = document.getElementById('userSection');
+const authSection = document.getElementById('authSection');
+const userAvatar = document.getElementById('userAvatar');
+const userDisplayName = document.getElementById('userDisplayName');
+const userEmail = document.getElementById('userEmail');
 
 // Language detection function
 function detectLanguage(text) {
@@ -218,9 +223,61 @@ function searchHistoryWord(word) {
     lookupWord();
 }
 
+// Check user authentication status
+async function checkUserAuth() {
+    try {
+        const response = await fetch('/user/info');
+        const data = await response.json();
+
+        if (data.authenticated) {
+            showUserSection(data.user);
+        } else {
+            showAuthSection();
+        }
+    } catch (error) {
+        console.error('Auth check error:', error);
+        showAuthSection();
+    }
+}
+
+// Show user section for authenticated users
+function showUserSection(user) {
+    userAvatar.textContent = user.display_name.charAt(0).toUpperCase();
+    userDisplayName.textContent = user.display_name;
+    userEmail.textContent = user.email;
+
+    userSection.classList.remove('hidden');
+    authSection.classList.add('hidden');
+}
+
+// Show auth section for non-authenticated users
+function showAuthSection() {
+    userSection.classList.add('hidden');
+    authSection.classList.remove('hidden');
+}
+
+// Logout function
+async function logout() {
+    try {
+        const response = await fetch('/logout', {
+            method: 'POST'
+        });
+
+        if (response.ok) {
+            showAuthSection();
+            // Reload history to show anonymous history
+            loadQueryHistory();
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+    }
+}
+
 // Focus on input when page loads
 document.addEventListener('DOMContentLoaded', function() {
     wordInput.focus();
+    // Check authentication status
+    checkUserAuth();
     // Load initial history
     loadQueryHistory();
 });

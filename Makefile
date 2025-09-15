@@ -10,6 +10,12 @@ open-venv: ## Setup development environment
 test: ## Run tests
 	uv run python scripts/run_tests.py
 
+test-clean: ## Run tests without warnings
+	uv run pytest tests/ --disable-warnings -q
+
+test-verbose: ## Run tests with full output
+	uv run pytest tests/ -v
+
 clean: ## Clean cache and temporary files
 	uv run pyclean -v .
 	find . -type d -name "__pycache__" -exec rm -rf {} +
@@ -39,3 +45,6 @@ clear-db: ## Clear database contents (with confirmation)
 
 clear-db-force: ## Force clear database contents (no confirmation)
 	uv run python scripts/clear_database.py --force
+
+migrate-db: ## Migrate database to latest schema
+	uv run python scripts/migrate_database.py

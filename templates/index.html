@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 中英文字典</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
     <!-- Markdown parser library -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
@@ -16,6 +17,31 @@
         </header>
 
         <main>
+            <!-- User Section -->
+            <div id="userSection" class="user-section hidden">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar"></div>
+                    <div class="user-details">
+                        <h3 id="userDisplayName"></h3>
+                        <p id="userEmail"></p>
+                    </div>
+                </div>
+                <div class="user-actions">
+                    <button class="user-btn secondary" onclick="logout()">登出</button>
+                </div>
+            </div>
+
+            <!-- Auth Links for non-authenticated users -->
+            <div id="authSection" class="user-section hidden">
+                <div class="user-info">
+                    <p>登入以保存您的查詢歷史</p>
+                </div>
+                <div class="auth-links-main">
+                    <a href="/login">登入</a>
+                    <a href="/register">註冊</a>
+                </div>
+            </div>
+
             <div class="search-section">
                 <div class="input-group">
                     <input

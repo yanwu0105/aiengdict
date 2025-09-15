@@ -244,3 +244,86 @@ class TestIntegration:
         assert data["word"] == "integration"
         assert data["language"] == "english"
         assert data["definition"] == "Complete definition with examples"
+
+
+class TestHistoryRoute:
+    """Test query history endpoint"""
+
+    def test_history_route_anonymous(self, client):
+        """Test history route for anonymous users"""
+        with patch("main.get_query_history") as mock_get_history:
+            mock_get_history.return_value = [
+                {
+                    "word": "test",
+                    "language": "english",
+                    "query_times": 1,
+                    "definition": "Test def",
+                    "updated_on": "2024-01-01 12:00",
+                }
+            ]
+
+            response = client.get("/history")
+
+            assert response.status_code == 200
+            data = json.loads(response.data)
+            assert "history" in data
+            assert len(data["history"]) == 1
+            # Should be called with user_id=None for anonymous users
+            mock_get_history.assert_called_with(user_id=None)
+
+    def test_history_route_error(self, client):
+        """Test history route with database error"""
+        with patch("main.get_query_history") as mock_get_history:
+            mock_get_history.side_effect = Exception("Database error")
+
+            response = client.get("/history")
+
+            assert response.status_code == 500
+            data = json.loads(response.data)
+            assert "error" in data
+            assert "獲取歷史記錄失敗" in data["error"]
+
+
+class TestUserAwareWordLookup:
+    """Test word lookup with user awareness"""
+
+    def test_lookup_saves_with_user_context(self, client):
+        """Test that word lookup considers user context when saving"""
+        with patch("main.get_word_definition") as mock_get_def, patch(
+            "main.save_word_record"
+        ) as mock_save, patch("main.current_user") as mock_user:
+            # Mock successful definition
+            mock_get_def.return_value = "Test definition"
+
+            # Mock anonymous user
+            mock_user.is_authenticated = False
+
+            response = client.post(
+                "/lookup",
+                data=json.dumps({"word": "test"}),
+                content_type="application/json",
+            )
+
+            assert response.status_code == 200
+            # Should save with user_id=None for anonymous users
+            mock_save.assert_called_once_with(
+                "test", "english", "Test definition", None
+            )
+
+    def test_lookup_error_not_saved(self, client):
+        """Test that failed lookups are not saved to database"""
+        with patch("main.get_word_definition") as mock_get_def, patch(
+            "main.save_word_record"
+        ) as mock_save:
+            # Mock error response
+            mock_get_def.return_value = "查詢時發生錯誤: API Error"
+
+            response = client.post(
+                "/lookup",
+                data=json.dumps({"word": "test"}),
+                content_type="application/json",
+            )
+
+            assert response.status_code == 200
+            # Should not save error responses
+            mock_save.assert_not_called()

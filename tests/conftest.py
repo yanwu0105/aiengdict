@@ -53,3 +53,53 @@ def mock_api_responses():
 def app_config():
     """Flask app configuration for testing"""
     return {"TESTING": True, "WTF_CSRF_ENABLED": False, "SECRET_KEY": "test-secret-key"}
+
+
+@pytest.fixture
+def test_users():
+    """Sample test users data"""
+    return {
+        "user1": {
+            "username": "testuser1",
+            "email": "test1@example.com",
+            "password": "password123",
+            "display_name": "Test User 1",
+        },
+        "user2": {
+            "username": "testuser2",
+            "email": "test2@example.com",
+            "password": "password456",
+            "display_name": "Test User 2",
+        },
+        "admin": {
+            "username": "admin",
+            "email": "admin@example.com",
+            "password": "admin123",
+            "display_name": "Administrator",
+        },
+    }
+
+
+@pytest.fixture
+def sample_word_records():
+    """Sample word records for testing"""
+    return [
+        {
+            "word": "hello",
+            "language": "english",
+            "definition": "A greeting word",
+            "query_times": 3,
+        },
+        {
+            "word": "world",
+            "language": "english",
+            "definition": "The earth and all people",
+            "query_times": 1,
+        },
+        {
+            "word": "你好",
+            "language": "chinese",
+            "definition": "中文問候語",
+            "query_times": 2,
+        },
+    ]

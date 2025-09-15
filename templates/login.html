@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入 - AI 中英文字典</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 AI 中英文字典</h1>
+            <p>登入您的帳戶</p>
+        </header>
+
+        <main>
+            <div class="auth-section">
+                <div class="auth-form">
+                    <h2>登入</h2>
+
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="username">用戶名或電子郵件</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                required
+                                autocomplete="username"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">密碼</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                autocomplete="current-password"
+                            >
+                        </div>
+
+                        <button type="submit" class="auth-btn" id="loginBtn">
+                            <span id="loginBtnText">登入</span>
+                            <span id="loginLoading" class="loading hidden">🔄</span>
+                        </button>
+                    </form>
+
+                    <div class="auth-links">
+                        <p>還沒有帳戶？ <a href="/register">立即註冊</a></p>
+                        <p><a href="/">返回首頁</a></p>
+                    </div>
+
+                    <div id="authMessage" class="auth-message hidden"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>
