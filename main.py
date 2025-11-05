@@ -1,5 +1,5 @@
-import os
 import re
+import os
 from flask import Flask, render_template, request, jsonify
 from flask_login import (
     LoginManager,
@@ -9,7 +9,7 @@ from flask_login import (
     current_user,
 )
 import google.generativeai as genai
-from dotenv import load_dotenv
+from src.config import Config
 from docs.prompts import get_prompt
 from src.database import (
     init_database,
@@ -20,13 +20,12 @@ from src.database import (
 )
 from src.models import User
 
-# Load environment variables
-load_dotenv()
-
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv(
-    "SECRET_KEY", "dev-secret-key-change-in-production"
-)
+app.config["SECRET_KEY"] = Config.SECRET_KEY
+app.config["MAX_CONTENT_LENGTH"] = Config.MAX_CONTENT_LENGTH
+app.config["SESSION_COOKIE_SECURE"] = Config.SESSION_COOKIE_SECURE
+app.config["SESSION_COOKIE_HTTPONLY"] = Config.SESSION_COOKIE_HTTPONLY
+app.config["SESSION_COOKIE_SAMESITE"] = Config.SESSION_COOKIE_SAMESITE
 
 # Initialize database
 init_database(app)
@@ -44,11 +43,8 @@ def load_user(user_id):
 
 
 # Configure Gemini API
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-2.5-flash")
-
-# Prompt style configuration (can be changed for testing)
-PROMPT_STYLE = "detailed"  # Options: "standard" or "detailed"
+genai.configure(api_key=Config.GEMINI_API_KEY)
+model = genai.GenerativeModel(Config.GEMINI_MODEL)
 
 
 def detect_language(text):
@@ -60,8 +56,8 @@ def detect_language(text):
 def get_word_definition(word, language):
     """Get word definition using Gemini API"""
     try:
-        # Get prompt from prompts.py
-        prompt_template = get_prompt(language, PROMPT_STYLE)
+        # Get prompt from prompts.py using configured style
+        prompt_template = get_prompt(language, Config.PROMPT_STYLE)
         prompt = prompt_template.format(word=word)
 
         response = model.generate_content(prompt)
@@ -190,4 +186,6 @@ def user_info():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=3217)
+    # Validate configuration before starting the server
+    Config.validate()
+    app.run(debug=Config.DEBUG, host=Config.HOST, port=Config.PORT)
